@@ -119,7 +119,7 @@ function createWindow () {
 		icon: __dirname + '/build/icon_small.png'
 	})
 
-	mainWindow.webContents.openDevTools();
+	//mainWindow.webContents.openDevTools();
 
 	mainWindow.setMenu(null);
 
