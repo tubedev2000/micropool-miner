@@ -66,7 +66,7 @@
 								<tr>
 									<td><i class="fas fa-wallet fa-lg fa-fw"></i>&ensp;Wallet Address</td>
 									<td class="right-border1">
-										<input id="mining_address" value="" onchange="ipcRenderer.send('set', ['mining_address',this.value.trim()]);" style="width:calc(100% - 12px)" type="text"/>
+										<input id="mining_login" value="" onchange="ipcRenderer.send('set', ['mining_login',this.value.trim()]);" style="width:calc(100% - 12px)" type="text"/>
 									</td>
 								</tr>
 							</table>
@@ -133,7 +133,7 @@
 								<tr class="no-top-line">
 									<td><i class="fas fa-server fa-lg fa-fw"></i>&ensp;Daemon Host</td>
 									<td>
-										<input id="daemonhost" value=""style="width:100%" onchange="ipcRenderer.send('set', ['daemonhost',this.value]);" type="text"/>
+										<input id="poolhost" value="" style="width:100%" onchange="ipcRenderer.send('set', ['poolhost',this.value]);" type="text"/>
 									</td>
 								</tr>
 							</table>
@@ -700,6 +700,10 @@
 					document.getElementById(arg[0]).value=arg[1];
 				}
 			})
+			ipcRenderer.on('add_remote_micropool', (event, host,port) => {
+				//fixme
+				document.getElementById('workers').innerHTML+=host+':'+port+'<br/>';
+			})
 			ipcRenderer.on('set', (event,item, arg) => {
 				console.log(item);
 				console.log(arg);
@@ -710,19 +714,6 @@
 					}
 					else {
 						document.getElementById("switch_miner").checked=false;
-					}
-				}else if(item == 'emb_daemon'){
-					if (arg == 1) {
-						document.getElementById('daemonhost').disabled = true;
-						document.getElementById("daemon_command_input").style.display="block";
-						document.getElementById("log").style.height='calc(100% - 25px)';
-						document.getElementById("switch_embed").checked=true;
-					}
-					else {
-						document.getElementById('daemonhost').disabled = false;
-						document.getElementById("daemon_command_input").style.display="none";
-						document.getElementById("log").style.height='100%';
-						document.getElementById("switch_embed").checked=false;
 					}
 				}else{
 					document.getElementById(item).value=arg;

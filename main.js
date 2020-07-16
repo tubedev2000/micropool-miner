@@ -4,6 +4,7 @@ const storage = require('electron-json-storage');
 const contextMenu = require('electron-context-menu');
 const path = require('path');
 const bonjour = require('nbonjour').create();
+const os = require('os');
 
 var emb_miner_status = 0;
 
@@ -25,9 +26,9 @@ Log.prototype.error = function (message) {this.log('error',message);}
 Log.prototype.debug = function (message) {this.log('debug',message);}
 const logger = new Log();
 
-process.on("uncaughtException", function(error) {
-	logger.error(error);
-});
+//process.on("uncaughtException", function(error) {
+	//logger.error(error.toString());
+//});
 
 
 contextMenu({
@@ -118,7 +119,7 @@ function createWindow () {
 		icon: __dirname + '/build/icon_small.png'
 	})
 
-	//mainWindow.webContents.openDevTools();
+	mainWindow.webContents.openDevTools();
 
 	mainWindow.setMenu(null);
 
@@ -136,7 +137,7 @@ function createWindow () {
 				loadstorage('mining_login',function(error,object) {
 					if(!error) global.minerconfig.mining_login = object;
 					loadstorage('emb_miner',function(error,object) {
-						if(!error) global.poolconfig.daemonhost = object;
+						if(!error) global.minerconfig.emb_miner = object;
 						
 						mainWindow.webContents.send('set','poolhost', global.minerconfig.poolhost);
 						mainWindow.webContents.send('set','poolport', global.minerconfig.poolport);
@@ -160,7 +161,7 @@ function createWindow () {
 	});
 	
 	ipcMain.on('set',(event,arg) => {
-		if(arg[0] === "mining_address") global.minerconfig.mining_login=arg[1];
+		if(arg[0] === "mining_login") global.minerconfig.mining_login=arg[1];
 		if(arg[0] === "poolport") global.minerconfig.poolport=arg[1];
 		if(arg[0] === "poolhost") global.minerconfig.poolhost=arg[1];
 		if(arg[0] === "emb_miner"){
@@ -170,7 +171,7 @@ function createWindow () {
 					start_miner();
 				
 				}else{
-					if(miner_child)miner_child.kill('SIGKILL');
+					if(miner_child)miner_child.kill();
 				}
 			}
 		}
