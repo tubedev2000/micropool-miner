@@ -98,7 +98,11 @@ function start_miner() {
 
 
 function scan(){
-	mainWindow.webContents.send('add_remote_micropool','192.168.178.100', 25000);
+	bonjour.find({ type: 'telnet' }, function (service) {
+		if(service.name == 'micropool') {
+			mainWindow.webContents.send('add_remote_micropool',service.referer.address, service.port);
+		}
+	});
 }
 
 
@@ -138,7 +142,12 @@ function createWindow () {
 						mainWindow.webContents.send('set','poolport', global.minerconfig.poolport);
 						mainWindow.webContents.send('set','mining_login', global.minerconfig.mining_login);
 						mainWindow.webContents.send('set','emb_miner', global.minerconfig.emb_miner);
-						mainWindow.webContents.send('add_remote_micropool','192.168.178.100', 25000);
+
+						bonjour.find({ type: 'telnet' }, function (service) {
+							if(service.name == 'micropool') {
+								mainWindow.webContents.send('add_remote_micropool',service.referer.address, service.port);
+							}
+						});
 						
 						if(global.minerconfig.emb_miner == 1) {
 							start_miner();
