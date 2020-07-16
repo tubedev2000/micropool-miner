@@ -1,0 +1,33 @@
+{
+  "name": "micro-pool-miner",
+  "version": "1.0.0",
+  "description": "A Tube Mining Stratum Server - standalone miner",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/tubedev2000/micropool-miner",
+  "author": "tubedev2000",
+  "license": "0bsd",
+  "devDependencies": {
+    "electron": "^4.0.6",
+    "electron-builder": "^22.7.0"
+  },
+  "dependencies": {
+    "app-root-dir": "^1.0.2",
+    "electron-context-menu": "^2.0.1",
+    "electron-json-storage": "^4.1.6",
+    "nbonjour": "^3.6.3"
+  },
+  "build": {
+    "extraFiles": [
+      {
+        "from": "dist/bin/${os}",
+        "to": "resources/bin",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  }
+}
