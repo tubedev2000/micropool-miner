@@ -85,7 +85,7 @@ function start_miner() {
 		}
 	}
 	const spawn = require( 'child_process' ).spawn;
-	miner_child = spawn( minerpath, ['-w','0','--algo','cuckaroo29b','--server',global.minerconfig.poolhost':'+global.minerconfig.poolport,'--user',global.minerconfig.mining_login]);  //add whatever switches you need here, test on command line first
+	miner_child = spawn( minerpath, ['-w','0','--algo','cuckaroo29b','--server',global.minerconfig.poolhost+':'+global.minerconfig.poolport,'--user',global.minerconfig.mining_login]);  //add whatever switches you need here, test on command line first
 	miner_child.stdout.on( 'data', data => {
 		data = data.toString().replace(/^\s+|\s+$/g, '');
 		mainWindow.webContents.send('log_daemon', data);
@@ -94,6 +94,11 @@ function start_miner() {
 		logger.error( data );
 	});
 
+}
+
+
+function scan(){
+	mainWindow.webContents.send('add_remote_micropool','192.168.178.100', 25000);
 }
 
 
@@ -116,6 +121,7 @@ function createWindow () {
 	mainWindow.loadFile('index.html');
 
 	ipcMain.on('run',(event,arg) => {
+		if(arg[0] === "scan_for_micropool") scan();
 	});
 
 	ipcMain.on('init',() => {
@@ -132,6 +138,7 @@ function createWindow () {
 						mainWindow.webContents.send('set','poolport', global.minerconfig.poolport);
 						mainWindow.webContents.send('set','mining_login', global.minerconfig.mining_login);
 						mainWindow.webContents.send('set','emb_miner', global.minerconfig.emb_miner);
+						mainWindow.webContents.send('add_remote_micropool','192.168.178.100', 25000);
 						
 						if(global.minerconfig.emb_miner == 1) {
 							start_miner();
