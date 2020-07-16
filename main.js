@@ -85,7 +85,7 @@ function start_miner() {
 		}
 	}
 	const spawn = require( 'child_process' ).spawn;
-	miner_child = spawn( minerpath, ['-w','0','--algo','cuckaroo29b','--server','127.0.0.1:'+global.poolconfig.poolport,'--user','emb']);  //add whatever switches you need here, test on command line first
+	miner_child = spawn( minerpath, ['-w','0','--algo','cuckaroo29b','--server',global.minerconfig.poolhost':'+global.minerconfig.poolport,'--user',global.minerconfig.mining_login]);  //add whatever switches you need here, test on command line first
 	miner_child.stdout.on( 'data', data => {
 		data = data.toString().replace(/^\s+|\s+$/g, '');
 		mainWindow.webContents.send('log_daemon', data);
@@ -116,42 +116,27 @@ function createWindow () {
 	mainWindow.loadFile('index.html');
 
 	ipcMain.on('run',(event,arg) => {
-		if(arg[0] === "resetData") resetData();
-		if(arg[0] === "updateWallet") updateWallet();
-		if(arg[0] === "runDaemonCommand") runDaemonCommand(arg[1]);
 	});
 
 	ipcMain.on('init',() => {
 		loadstorage('poolport',function(error,object) {
-			if(!error) global.poolconfig.poolport = object;
-			loadstorage('ctrlport',function(error,object) {
-				if(!error) global.poolconfig.ctrlport = object;
-				loadstorage('daemonport',function(error,object) {
-					if(!error) global.poolconfig.daemonport = object;
-					loadstorage('mining_address',function(error,object) {
-						if(!error) global.poolconfig.mining_address = object;
-						loadstorage('emb_miner',function(error,object) {
-							if(!error) global.poolconfig.emb_miner = object;
-							loadstorage('emb_daemon',function(error,object) {
-								if(!error) global.poolconfig.emb_daemon = object;
-								loadstorage('daemonhost',function(error,object) {
-									if(!error) global.poolconfig.daemonhost = object;
-									
-									mainWindow.webContents.send('set','daemonport', global.poolconfig.daemonport);
-									mainWindow.webContents.send('set','ctrlport', global.poolconfig.ctrlport);
-									mainWindow.webContents.send('set','poolport', global.poolconfig.poolport);
-									mainWindow.webContents.send('set','mining_address', global.poolconfig.mining_address);
-									mainWindow.webContents.send('set','emb_miner', global.poolconfig.emb_miner);
-									mainWindow.webContents.send('set','emb_daemon', global.poolconfig.emb_daemon);
-									mainWindow.webContents.send('set','daemonhost', global.poolconfig.daemonhost);
-									
-									if(global.poolconfig.emb_miner == 1) {
-										start_miner();
-									}
-									
-								});
-							});
-						});
+			if(!error) global.minerconfig.poolport = object;
+			loadstorage('poolhost',function(error,object) {
+				if(!error) global.minerconfig.poolhost = object;
+				loadstorage('mining_login',function(error,object) {
+					if(!error) global.minerconfig.mining_login = object;
+					loadstorage('emb_miner',function(error,object) {
+						if(!error) global.poolconfig.daemonhost = object;
+						
+						mainWindow.webContents.send('set','poolhost', global.minerconfig.poolhost);
+						mainWindow.webContents.send('set','poolport', global.minerconfig.poolport);
+						mainWindow.webContents.send('set','mining_login', global.minerconfig.mining_login);
+						mainWindow.webContents.send('set','emb_miner', global.minerconfig.emb_miner);
+						
+						if(global.minerconfig.emb_miner == 1) {
+							start_miner();
+						}
+						
 					});
 				});
 			});
@@ -159,13 +144,13 @@ function createWindow () {
 	});
 	
 	ipcMain.on('set',(event,arg) => {
-		if(arg[0] === "mining_address") global.poolconfig.mining_address=arg[1];
-		if(arg[0] === "daemonport") global.poolconfig.daemonport=arg[1];
-		if(arg[0] === "daemonhost") global.poolconfig.daemonhost=arg[1];
+		if(arg[0] === "mining_address") global.minerconfig.mining_login=arg[1];
+		if(arg[0] === "poolport") global.minerconfig.poolport=arg[1];
+		if(arg[0] === "poolhost") global.minerconfig.poolhost=arg[1];
 		if(arg[0] === "emb_miner"){
-			if(arg[1] != global.poolconfig.emb_miner) {
-				global.poolconfig.emb_miner=arg[1];
-				if(global.poolconfig.emb_miner == 1) {
+			if(arg[1] != global.minerconfig.emb_miner) {
+				global.minerconfig.emb_miner=arg[1];
+				if(global.minerconfig.emb_miner == 1) {
 					start_miner();
 				
 				}else{
