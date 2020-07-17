@@ -42,7 +42,7 @@
 									<col style="width: *">
 								</colgroup>
 								<tr class="no-top-line">
-									<td><i class="fas fa-user-circle fa-lg fa-fw"></i>&ensp;Username</td>
+									<td><i class="fas fa-user-circle fa-lg fa-fw"></i>&ensp;Pool Login</td>
 									<td>
 										<input id="mining_login" value=""style="width:100%" onchange="ipcRenderer.send('set', ['mining_login',this.value]);" type="text"/>
 									</td>
@@ -56,7 +56,7 @@
 									<col style="width: *">
 								</colgroup>
 								<tr class="no-top-line">
-									<td><i class="fas fa-bolt fa-lg fa-fw"></i>&ensp;Mining IP</td>
+									<td><i class="fas fa-bolt fa-lg fa-fw"></i>&ensp;Pool Host</td>
 									<td class="right-border1">
 										<input id="poolhost" value="" onchange="ipcRenderer.send('set', ['poolhost',this.value]);" style="width:calc(100% - 12px)" type="text"/>
 									</td>
@@ -113,7 +113,7 @@
 									<col style="width: *">
 								</colgroup>
 								<tr class="no-top-line">
-									<td><i class="fas fa-plug fa-lg fa-fw"></i>&ensp;Mining Port</td>
+									<td><i class="fas fa-plug fa-lg fa-fw"></i>&ensp;Pool Port</td>
 									<td class="right-border1">
 										<input id="poolport" value="" onchange="ipcRenderer.send('set', ['poolport',this.value]);" style="width:calc(100% - 12px)" type="text"/>
 									</td>

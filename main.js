@@ -100,7 +100,7 @@ function start_miner() {
 
 function scan(){
 	bonjour.find({ type: 'telnet' }, function (service) {
-		if(service.name == 'micropool') {
+		if(service.name.startsWith('micropool')) {
 			mainWindow.webContents.send('add_remote_micropool',service.referer.address, service.port);
 		}
 	});
@@ -145,7 +145,7 @@ function createWindow () {
 						mainWindow.webContents.send('set','emb_miner', global.minerconfig.emb_miner);
 
 						bonjour.find({ type: 'telnet' }, function (service) {
-							if(service.name == 'micropool') {
+							if(service.name.startsWith('micropool')) {
 								mainWindow.webContents.send('add_remote_micropool',service.referer.address, service.port);
 							}
 						});
