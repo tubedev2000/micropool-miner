@@ -12,7 +12,7 @@ global.minerconfig = {
 	poolport:25650, 
 	poolhost:'',
 	mining_login:'',
-	emb_miner:false
+	emb_miner:2
 };
 
 function isDev() {
